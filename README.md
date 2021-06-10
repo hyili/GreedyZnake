@@ -1,25 +1,29 @@
 GreedyZnake on Terminal GameBoard
 ===
-### Language
-- Written in C++(C++11) Ncurses library
+A group of greedy snake gaming AI on ncurses-based gameboard framework using C++. How greedy are you?
+![build_and_execute](build_and_execute.gif)
+![game_autoplay](game_autoplay.gif)
 
-### Build
-- make
+### Programming Language
+Written in C++(C++11) Ncurses library
 
-### Current Game
-- GreedyZnake
-
-### Options
-- Gameboard support adjustable maxfps(-f {FPS}, Frames Per Second, refresh rate)
-- Gameboard support adjustable maxaps(-s {APS}, Action-applied Per Second, speed)
-
-Feature
+GreedyZnake
 ===
+### Build
+```
+# make
+```
+
 ### Run
-- exec:./output/snake
+```
+# ./output/snake
+```
 
 ### Autoplay
-- using -a and -m option in the beginning
+using -a and specify AI strategy/method using -m option below
+```
+# ./output/snake -a -e -f 60 -s 100 -m O
+```
 
 ### Keyboard Control
 - Move
@@ -38,6 +42,8 @@ Feature
 - A snake will stop moving while meeting walls or body
 
 ### Options
+- Gameboard support adjustable maxfps(-f {FPS}, Frames Per Second, refresh rate)
+- Gameboard support adjustable maxaps(-s {APS}, Action-applied Per Second, speed)
 - A snake's move speed(-s {speed}) is adjustable, implement based on APS
 - A snake's initial body length(-l {length}) is adjustable
 - A snake's initial location(-y {location})(-x {location}) is adjustable
