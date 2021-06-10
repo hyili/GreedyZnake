@@ -1,24 +1,27 @@
-Terminal GameBoard
+GreedyZnake on Terminal GameBoard
 ===
-# Language
+### Language
 - Written in C++(C++11) Ncurses library
 
-# Build
+### Build
 - make
 
-# Current Game
-- snake
+### Current Game
+- GreedyZnake
 
-# Options
+### Options
 - Gameboard support adjustable maxfps(-f {FPS}, Frames Per Second, refresh rate)
 - Gameboard support adjustable maxaps(-s {APS}, Action-applied Per Second, speed)
 
-Snake Feature
+Feature
 ===
-# Run
+### Run
 - exec:./output/snake
 
-# Keyboard Control
+### Autoplay
+- using -a and -m option in the beginning
+
+### Keyboard Control
 - Move
     - Up/Down/Left/Right
 - Pause
@@ -28,18 +31,18 @@ Snake Feature
 - Restart(Reset)
     - r
 
-# Rules
+### Rules
 - A snake keeps searching for food
 - A snake grows up its body each time after having a food
 - A snake cannot cross over its body
 - A snake will stop moving while meeting walls or body
 
-# Options
+### Options
 - A snake's move speed(-s {speed}) is adjustable, implement based on APS
 - A snake's initial body length(-l {length}) is adjustable
 - A snake's initial location(-y {location})(-x {location}) is adjustable
-- Borderless(-e) mode support, the map is loop around
-- Auto(-a) mode support, allow customizable Bot to autoplay the game
+- Fence mode(-e) support, the snake will be blocked by fence around the map
+- Auto mode(-a) support, using customizable Bot to autoplay the game
 - Strategy selection(-m {strategy})
     - 'A': Pure food-finding(A*) and Wandering.
     - 'a': Pure food-finding(A*).
