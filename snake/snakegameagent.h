@@ -5,8 +5,8 @@
 #endif
 
 class Snake : public GameAgentBase {
-    list<pair<int, int>> body;
-    mutable mutex bodyMutex;
+    Nodes body;
+    mutable std::mutex bodyMutex;
 
     int _length;
     int _direction;
@@ -19,12 +19,12 @@ class Snake : public GameAgentBase {
     Snake(int len, int y, int x) : GameAgentBase() {
         _direction = 0;
         _trackingDirection = 0;
-        _length = inputLength = max(1, len);
+        _length = inputLength = std::max(1, len);
         inputY = y;
         inputX = x;
         for (int i = 0; i < _length; i++) {
-            const lock_guard<mutex> lock(bodyMutex);
-            body.push_front(pair<int, int>(inputY, inputX));
+            const std::lock_guard<std::mutex> lock(bodyMutex);
+            body.push_front(Node(inputY, inputX));
         }
     };
     Snake(const Snake &ref) : GameAgentBase() {
@@ -48,9 +48,9 @@ class Snake : public GameAgentBase {
 
     // suffix const indicates that the function is readonly
     virtual void reset() override;
-    pair<int, int> getHead() const;
-    pair<int, int> getTail() const;
-    list<pair<int, int>> getBodyCopy() const;
+    Node getHead() const;
+    Node getTail() const;
+    Nodes getBodyCopy() const;
     int getDirection() const;
     int getPrevDirection() const;
     int getLength() const;

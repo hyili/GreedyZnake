@@ -7,6 +7,9 @@
 #ifndef __GAMEBOARD_HEADER__
 #include "gameboard.h"
 #endif
+#ifndef __TYPEDEF_HEADER__
+#include "typedef.h"
+#endif
 
 template <typename GB, typename GC> class GameRoleBase {
   protected:

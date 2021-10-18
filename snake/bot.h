@@ -21,10 +21,10 @@ class Bot {
 
     class AStarNode {
       public:
-        pair<int, int> loc;
+        Node loc;
         double cost;
 
-        AStarNode(const pair<int, int> &l, double c) {
+        AStarNode(const Node &l, double c) {
             loc = l;
             cost = c;
         };
@@ -35,50 +35,50 @@ class Bot {
         bool operator()(const AStarNode &a, const AStarNode &b) const;
     };
 
-    typedef priority_queue<AStarNode, vector<AStarNode>, AStarComp> AStarCostPQ;
-    typedef vector<double> AStarCostRow;
-    typedef vector<AStarCostRow> AStarCostMap;
-    typedef vector<int> FillVisitedRow;
-    typedef vector<FillVisitedRow> FillVisitedMap;
-    typedef vector<int> HMTPathRow;
-    typedef vector<HMTPathRow> HMTPathMap;
+    typedef std::priority_queue<AStarNode, std::vector<AStarNode>, AStarComp> AStarCostPQ;
+    typedef std::vector<double> AStarCostRow;
+    typedef std::vector<AStarCostRow> AStarCostMap;
+    typedef std::vector<int> FillVisitedRow;
+    typedef std::vector<FillVisitedRow> FillVisitedMap;
+    typedef std::vector<int> HMTPathRow;
+    typedef std::vector<HMTPathRow> HMTPathMap;
 
     void setDebugMsg();
     int teleportY(int y) const;
     int teleportX(int x) const;
-    bool checkHeadOrMovable(const pair<int, int> &curr) const;
+    bool checkHeadOrMovable(const Node &curr) const;
     bool checkHeadOrMovable(int y, int x) const;
-    bool checkMovable(const pair<int, int> &curr) const;
+    bool checkMovable(const Node &curr) const;
     bool checkMovable(int y, int x) const;
-    bool checkFence(const pair<int, int> &curr) const;
+    bool checkFence(const Node &curr) const;
     bool checkFence(int y, int x) const;
-    double heuristic(const pair<int, int> &curr,
-                     const pair<int, int> &end) const;
-    pair<int, int> AStarFindNextSpotFromNeighbor(const pair<int, int> curr,
+    double heuristic(const Node &curr,
+                     const Node &end) const;
+    Node AStarFindNextNodeFromNeighbor(const Node curr,
                                                  int target) const;
-    void AStarMarkBestPath(pair<int, int> &start, pair<int, int> &end);
-    void AStarProcess(pair<int, int> curr, pair<int, int> &end, int distance);
-    int AStarGetAction(const pair<int, int> &curr) const;
+    void AStarMarkBestPath(Node &start, Node &end);
+    void AStarProcess(Node curr, Node &end, int distance);
+    int AStarGetAction(const Node &curr) const;
     void AStarReset();
     void AStarReset(int y, int x);
-    int AStar(pair<int, int> start, pair<int, int> end);
+    int AStar(Node start, Node end);
 
-    int Wander(pair<int, int> &start, int prevDirection);
+    int Wander(Node &start, int prevDirection);
 
-    int FillGetAction(pair<int, int> &start);
+    int FillGetAction(Node &start);
     void FillReset();
-    int FillCheckInside(pair<int, int> curr, int &rounds,
-                        pair<int, int> &target);
-    int FillProcess(pair<int, int> &start, pair<int, int> &target, int rounds);
-    vector<pair<int, int>> FillFindNeighbor(pair<int, int> curr, int status);
-    int Fill(pair<int, int> &start);
+    int FillCheckInside(Node curr, int &rounds,
+                        Node &target);
+    int FillProcess(Node &start, Node &target, int rounds);
+    std::vector<Node> FillFindNeighbor(Node curr, int status);
+    int Fill(Node &start);
 
     /* Hamiltonian Path */
-    int HMTGetAction(pair<int, int> &curr, pair<int, int> &target);
+    int HMTGetAction(Node &curr, Node &target);
     void HMTInit();
     void HMTReset();
-    bool HMTProcess(pair<int,int> curr, int index);
-    int HMT(pair<int,int> &start, pair<int, int> &end);
+    bool HMTProcess(Node curr, int index);
+    int HMT(Node &start, Node &end);
 
 
     bool AStarPreservePath;
@@ -89,7 +89,7 @@ class Bot {
     int mapSize;
     int prevDirection;
     int AStarCounter, WanderCounter, HMTCounter;
-    string debugMsg;
+    std::string debugMsg;
 
   public:
     Bot(SnakeGamePlayer &gameplayer, char m) {

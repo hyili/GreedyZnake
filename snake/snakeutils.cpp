@@ -2,16 +2,14 @@
 #include "snakeutils.h"
 #endif
 
-using namespace std;
-
-const string SnakeGameCounters::getStatusBar() {
-    const lock_guard<mutex> lock(gameCountersMutex);
-    string statusBar = "fps=" + to_string(fps) + "; aps=" + to_string(aps) +
-                       "; tps=" + to_string(tps) + "; round " +
-                       to_string(gameNum) + "; s=" + to_string(score) +
-                       "; low=" + to_string(lowestScore) +
-                       "; high=" + to_string(highestScore) +
-                       "; avg=" + to_string(avgScore) + 
+const std::string SnakeGameCounters::getStatusBar() {
+    const std::lock_guard<std::mutex> lock(gameCountersMutex);
+    std::string statusBar = "fps=" + std::to_string(fps) + "; aps=" + std::to_string(aps) +
+                       "; tps=" + std::to_string(tps) + "; round " +
+                       std::to_string(gameNum) + "; s=" + std::to_string(score) +
+                       "; low=" + std::to_string(lowestScore) +
+                       "; high=" + std::to_string(highestScore) +
+                       "; avg=" + std::to_string(avgScore) + 
                        "; debugMsg=" + debugMsg +
                        ";          ";
 
@@ -19,18 +17,18 @@ const string SnakeGameCounters::getStatusBar() {
 };
 
 void SnakeGameCounters::updateTPS(int mul) {
-    const lock_guard<mutex> lock(gameCountersMutex);
+    const std::lock_guard<std::mutex> lock(gameCountersMutex);
     tps = (int)((double)(trigBot - prevTrigBot) / (double)(timer - prevTimer)) *
           mul;
 };
 
 void SnakeGameCounters::increaseTriggerBot() {
-    const lock_guard<mutex> lock(gameCountersMutex);
+    const std::lock_guard<std::mutex> lock(gameCountersMutex);
     trigBot += 1;
 };
 
-void SnakeGameCounters::setDebugMsg(string s) {
-    const lock_guard<mutex> lock(gameCountersMutex);
+void SnakeGameCounters::setDebugMsg(std::string s) {
+    const std::lock_guard<std::mutex> lock(gameCountersMutex);
     debugMsg = s;
 };
 

@@ -17,7 +17,7 @@ int Bot::teleportY(int y) const { return _gameplayer->teleportY(y); }
 
 int Bot::teleportX(int x) const { return _gameplayer->teleportX(x); }
 
-bool Bot::checkHeadOrMovable(const pair<int, int> &curr) const {
+bool Bot::checkHeadOrMovable(const Node &curr) const {
     return _gameplayer->checkMovable(curr.first, curr.second) ||
            _gameplayer->checkSnakeHead(curr.first, curr.second);
 }
@@ -26,7 +26,7 @@ bool Bot::checkHeadOrMovable(int y, int x) const {
     return _gameplayer->checkMovable(y, x) || _gameplayer->checkSnakeHead(y, x);
 }
 
-bool Bot::checkMovable(const pair<int, int> &curr) const {
+bool Bot::checkMovable(const Node &curr) const {
     return _gameplayer->checkMovable(curr.first, curr.second);
 }
 
@@ -34,7 +34,7 @@ bool Bot::checkMovable(int y, int x) const {
     return _gameplayer->checkMovable(y, x);
 }
 
-bool Bot::checkFence(const pair<int, int> &curr) const {
+bool Bot::checkFence(const Node &curr) const {
     return _gameplayer->checkFence(curr.first, curr.second);
 }
 
@@ -52,45 +52,45 @@ bool Bot::AStarComp::operator()(const AStarNode &a, const AStarNode &b) const {
     return false;
 }
 
-double Bot::heuristic(const pair<int, int> &curr,
-                      const pair<int, int> &end) const {
-    double yOffset = min(teleportY(end.first - curr.first),
+double Bot::heuristic(const Node &curr,
+                      const Node &end) const {
+    double yOffset = std::min(teleportY(end.first - curr.first),
                          teleportY(curr.first - end.first));
-    double xOffset = min(teleportX(end.second - curr.second),
+    double xOffset = std::min(teleportX(end.second - curr.second),
                          teleportX(curr.second - end.second));
 
     return sqrt(yOffset * yOffset + xOffset * xOffset);
 }
 
-pair<int, int> Bot::AStarFindNextSpotFromNeighbor(const pair<int, int> curr,
+Node Bot::AStarFindNextNodeFromNeighbor(const Node curr,
                                                   int target) const {
     int locY, locX;
 
     locY = teleportY(curr.first - 1);
     locX = curr.second;
     if (map[locY][locX] == target)
-        return pair<int, int>(locY, locX);
+        return Node(locY, locX);
 
     locY = teleportY(curr.first + 1);
     if (map[locY][locX] == target)
-        return pair<int, int>(locY, locX);
+        return Node(locY, locX);
 
     locY = curr.first;
     locX = teleportX(curr.second - 1);
     if (map[locY][locX] == target)
-        return pair<int, int>(locY, locX);
+        return Node(locY, locX);
 
     locX = teleportX(curr.second + 1);
     if (map[locY][locX] == target)
-        return pair<int, int>(locY, locX);
+        return Node(locY, locX);
 
-    return pair<int, int>(-1, -1);
+    return Node(-1, -1);
 }
 
-void Bot::AStarMarkBestPath(pair<int, int> &start, pair<int, int> &end) {
+void Bot::AStarMarkBestPath(Node &start, Node &end) {
     int sy = start.first, sx = start.second, ey = end.first, ex = end.second;
     int y = sy, x = sx, target;
-    pair<int, int> next;
+    Node next;
 
     while (!(y == ey && x == ex)) {
         if ((y == -1) && (x == -1)) {
@@ -100,7 +100,7 @@ void Bot::AStarMarkBestPath(pair<int, int> &start, pair<int, int> &end) {
 
         target = map[y][x] - 1;
         map[y][x] = -map[y][x] - 2;
-        next = AStarFindNextSpotFromNeighbor(pair<int, int>(y, x), target);
+        next = AStarFindNextNodeFromNeighbor(Node(y, x), target);
         y = next.first;
         x = next.second;
     }
@@ -109,7 +109,7 @@ void Bot::AStarMarkBestPath(pair<int, int> &start, pair<int, int> &end) {
     map[y][x] = -map[y][x] - 2;
 }
 
-void Bot::AStarProcess(pair<int, int> curr, pair<int, int> &end, int distance) {
+void Bot::AStarProcess(Node curr, Node &end, int distance) {
     if (checkHeadOrMovable(curr) && (map[curr.first][curr.second] == -1)) {
         double cost = distance + heuristic(curr, end);
         AStarNode currAStarNode = AStarNode(curr, cost);
@@ -120,11 +120,11 @@ void Bot::AStarProcess(pair<int, int> curr, pair<int, int> &end, int distance) {
     return;
 }
 
-int Bot::AStarGetAction(const pair<int, int> &curr) const {
+int Bot::AStarGetAction(const Node &curr) const {
     int temp;
 
     if (map[curr.first][curr.second] != -1) {
-        pair<int, int> next = AStarFindNextSpotFromNeighbor(
+        Node next = AStarFindNextNodeFromNeighbor(
             curr, map[curr.first][curr.second] - 1);
 
         if (next.first == -1 || next.second == -1)
@@ -177,17 +177,17 @@ void Bot::AStarReset(int y, int x) {
     }
 }
 
-int Bot::AStar(pair<int, int> start, pair<int, int> end) {
+int Bot::AStar(Node start, Node end) {
     int result = 0;
 
     // TODO: REMOVE
 //    if (start.first == 9 && start.second == 82) {
-//        debugMsg = to_string(start.first) + "_" + to_string(start.second) + "_" + to_string(end.first) + "_" + to_string(end.second);
+//        debugMsg = to_std::string(start.first) + "_" + to_std::string(start.second) + "_" + to_std::string(end.first) + "_" + to_std::string(end.second);
 //        setDebugMsg();
 //    }
 
 //    if (start.first == 9 && start.second == 82) {
-//        debugMsg = to_string(map[9][82]);
+//        debugMsg = to_std::string(map[9][82]);
 //        setDebugMsg();
 //    }
 
@@ -215,16 +215,16 @@ int Bot::AStar(pair<int, int> start, pair<int, int> end) {
         }
 
         // update the neighbors
-        AStarProcess(pair<int, int>(teleportY(currAStarNode.loc.first - 1),
+        AStarProcess(Node(teleportY(currAStarNode.loc.first - 1),
                                     currAStarNode.loc.second),
                      end, distance + 1);
-        AStarProcess(pair<int, int>(teleportY(currAStarNode.loc.first + 1),
+        AStarProcess(Node(teleportY(currAStarNode.loc.first + 1),
                                     currAStarNode.loc.second),
                      end, distance + 1);
-        AStarProcess(pair<int, int>(currAStarNode.loc.first,
+        AStarProcess(Node(currAStarNode.loc.first,
                                     teleportX(currAStarNode.loc.second - 1)),
                      end, distance + 1);
-        AStarProcess(pair<int, int>(currAStarNode.loc.first,
+        AStarProcess(Node(currAStarNode.loc.first,
                                     teleportX(currAStarNode.loc.second + 1)),
                      end, distance + 1);
     }
@@ -234,8 +234,8 @@ int Bot::AStar(pair<int, int> start, pair<int, int> end) {
     return result;
 }
 
-int Bot::Wander(pair<int, int> &start, int prevDirection) {
-    vector<int> actions;
+int Bot::Wander(Node &start, int prevDirection) {
+    std::vector<int> actions;
     if (checkMovable(teleportY(start.first - 1), start.second)) {
         if (KEY_UP == prevDirection)
             return prevDirection;
@@ -264,7 +264,7 @@ int Bot::Wander(pair<int, int> &start, int prevDirection) {
     return actions[index];
 }
 
-int Bot::FillGetAction(pair<int, int> &start) { return 0; }
+int Bot::FillGetAction(Node &start) { return 0; }
 
 void Bot::FillReset() {
     int ybound = _gameplayer->getYBound();
@@ -279,7 +279,7 @@ void Bot::FillReset() {
     }
 
     const Snake *snake = _gameplayer->getSnake(0);
-    list<pair<int, int>> body = snake->getBodyCopy();
+    Nodes body = snake->getBodyCopy();
     int val = 1;
 
     for (auto ritr = body.crbegin(); ritr != body.crend(); ritr++)
@@ -301,8 +301,8 @@ void Bot::FillReset() {
  * if visited map records INT_MAX means there is a fence.
  * if visited map records val > 0 means there is a snake body.
  * */
-int Bot::FillCheckInside(pair<int, int> curr, int &rounds,
-                         pair<int, int> &target) {
+int Bot::FillCheckInside(Node curr, int &rounds,
+                         Node &target) {
     auto ptr = visited[curr.first].begin() + curr.second;
     int spaces = 0;
 
@@ -323,16 +323,16 @@ int Bot::FillCheckInside(pair<int, int> curr, int &rounds,
         spaces += 1;
 
         spaces += FillCheckInside(
-            pair<int, int>(teleportY(curr.first - 1), curr.second), rounds,
+            Node(teleportY(curr.first - 1), curr.second), rounds,
             target);
         spaces += FillCheckInside(
-            pair<int, int>(teleportY(curr.first + 1), curr.second), rounds,
+            Node(teleportY(curr.first + 1), curr.second), rounds,
             target);
         spaces += FillCheckInside(
-            pair<int, int>(curr.first, teleportX(curr.second - 1)), rounds,
+            Node(curr.first, teleportX(curr.second - 1)), rounds,
             target);
         spaces += FillCheckInside(
-            pair<int, int>(curr.first, teleportX(curr.second + 1)), rounds,
+            Node(curr.first, teleportX(curr.second + 1)), rounds,
             target);
     }
 
@@ -343,14 +343,14 @@ int Bot::FillCheckInside(pair<int, int> curr, int &rounds,
  * Fill the spaces using right-hand rule
  * and return the next direction of start
  */
-int Bot::FillProcess(pair<int, int> &start, pair<int, int> &target, int rounds) {
+int Bot::FillProcess(Node &start, Node &target, int rounds) {
     int currDirection = 0, nextDirection = 0;
     bool extended = false;
 
     // TODO: can still be improved
     AStarReset();
     currDirection = AStar(start, target);
-    pair<int, int> next = AStarFindNextSpotFromNeighbor(start, map[start.first][start.second] - 1);
+    Node next = AStarFindNextNodeFromNeighbor(start, map[start.first][start.second] - 1);
     if (next.first != -1 && next.second != -1)
         nextDirection = AStarGetAction(next);
 
@@ -448,32 +448,32 @@ int Bot::FillProcess(pair<int, int> &start, pair<int, int> &target, int rounds) 
     return currDirection;
 }
 
-vector<pair<int, int>> Bot::FillFindNeighbor(pair<int, int> curr, int status) {
-    vector<pair<int, int>> result;
+std::vector<Node> Bot::FillFindNeighbor(Node curr, int status) {
+    std::vector<Node> result;
     int locY, locX;
 
     locY = teleportY(curr.first - 1);
     locX = curr.second;
     if (visited[locY][locX] == status)
-        result.push_back(pair<int, int>(locY, locX));
+        result.push_back(Node(locY, locX));
 
     locY = teleportY(curr.first + 1);
     if (visited[locY][locX] == status)
-        result.push_back(pair<int, int>(locY, locX));
+        result.push_back(Node(locY, locX));
 
     locY = curr.first;
     locX = teleportX(curr.second - 1);
     if (visited[locY][locX] == status)
-        result.push_back(pair<int, int>(locY, locX));
+        result.push_back(Node(locY, locX));
 
     locX = teleportX(curr.second + 1);
     if (visited[locY][locX] == status)
-        result.push_back(pair<int, int>(locY, locX));
+        result.push_back(Node(locY, locX));
 
     return result;
 }
 
-int Bot::Fill(pair<int, int> &start) {
+int Bot::Fill(Node &start) {
     int result = 0;
 
     /* TODO: can cache the path */
@@ -487,13 +487,13 @@ int Bot::Fill(pair<int, int> &start) {
     int tempRounds, rounds = INT_MAX;
     int tempSpaces, spaces = 0;
     int diff = INT_MIN;
-    pair<int, int> tempTarget, target = start;
+    Node tempTarget, target = start;
 
     tempRounds = visited[start.first][start.second];
     tempTarget = start;
     // Up
     if ((tempSpaces = FillCheckInside(
-                    pair<int, int>(teleportY(start.first - 1), start.second),
+                    Node(teleportY(start.first - 1), start.second),
                     tempRounds, tempTarget)) > tempRounds) {
         if (diff < tempSpaces - tempRounds) {
             spaces = tempSpaces;
@@ -508,7 +508,7 @@ int Bot::Fill(pair<int, int> &start) {
     tempTarget = start;
     // Down
     if ((tempSpaces = FillCheckInside(
-                    pair<int, int>(teleportY(start.first + 1), start.second),
+                    Node(teleportY(start.first + 1), start.second),
                     tempRounds, tempTarget)) > tempRounds) {
         if (diff < tempSpaces - tempRounds) {
             spaces = tempSpaces;
@@ -523,7 +523,7 @@ int Bot::Fill(pair<int, int> &start) {
     tempTarget = start;
     // Left
     if ((tempSpaces = FillCheckInside(
-                   pair<int, int>(start.first, teleportX(start.second - 1)),
+                   Node(start.first, teleportX(start.second - 1)),
                    tempRounds, tempTarget)) > tempRounds) {
         if (diff < tempSpaces - tempRounds) {
             spaces = tempSpaces;
@@ -538,7 +538,7 @@ int Bot::Fill(pair<int, int> &start) {
     tempRounds = visited[start.first][start.second];
     tempTarget = start;
     if ((tempSpaces = FillCheckInside(
-                   pair<int, int>(start.first, teleportX(start.second + 1)),
+                   Node(start.first, teleportX(start.second + 1)),
                    tempRounds, tempTarget)) > tempRounds) {
         if (diff < tempSpaces - tempRounds) {
             spaces = tempSpaces;
@@ -550,7 +550,7 @@ int Bot::Fill(pair<int, int> &start) {
     }
 
     // find neighbors of target that are visited
-    vector<pair<int, int>> targets = FillFindNeighbor(target, -1);
+    std::vector<Node> targets = FillFindNeighbor(target, -1);
 
     // if we can find a weakest coor
     // find a long path from start to target use at least rounds movements.
@@ -562,7 +562,7 @@ int Bot::Fill(pair<int, int> &start) {
 }
 
 
-int Bot::HMTGetAction(pair<int, int> &curr, pair<int,int> &target) {
+int Bot::HMTGetAction(Node &curr, Node &target) {
     // TODO: debug
     int result = 0;
     int index = hmt[curr.first][curr.second];
@@ -619,7 +619,7 @@ void Bot::HMTReset() {
     }
 };
 
-bool Bot::HMTProcess(pair<int,int> curr, int index) {
+bool Bot::HMTProcess(Node curr, int index) {
     // TODO: debug & Too Slow
     //if (_gameplayer->getMovableArea() == (_gameplayer->getYBound()) * (_gameplayer->getXBound())) return true;
     if (index == _gameplayer->getMovableArea()-1) {
@@ -639,17 +639,17 @@ bool Bot::HMTProcess(pair<int,int> curr, int index) {
 
     hmt[curr.first][curr.second] = index;
 
-    if (HMTProcess(pair<int,int>(teleportY(curr.first-1), curr.second), index+1)) return true;
-    if (HMTProcess(pair<int,int>(teleportY(curr.first+1), curr.second), index+1)) return true;
-    if (HMTProcess(pair<int,int>(curr.first, teleportX(curr.second-1)), index+1)) return true;
-    if (HMTProcess(pair<int,int>(curr.first, teleportX(curr.second+1)), index+1)) return true;
+    if (HMTProcess(Node(teleportY(curr.first-1), curr.second), index+1)) return true;
+    if (HMTProcess(Node(teleportY(curr.first+1), curr.second), index+1)) return true;
+    if (HMTProcess(Node(curr.first, teleportX(curr.second-1)), index+1)) return true;
+    if (HMTProcess(Node(curr.first, teleportX(curr.second+1)), index+1)) return true;
 
     hmt[curr.first][curr.second] = -1;
 
     return false;
 };
 
-int Bot::HMT(pair<int,int> &start, pair<int,int> &end) {
+int Bot::HMT(Node &start, Node &end) {
     int result = HMTGetAction(start, end);
 
     if (result != 0)
@@ -668,10 +668,10 @@ int Bot::generate() {
     if (_gameplayer->checkSnake() && _gameplayer->checkFood()) {
         const Snake *snake = _gameplayer->getSnake(0);
         int direction = snake->getDirection();
-        pair<int, int> head = snake->getHead();
-        pair<int, int> tail = snake->getTail();
-        pair<int, int> footprint = _gameplayer->getLatestFootprint();
-        pair<int, int> food = _gameplayer->getFood();
+        Node head = snake->getHead();
+        Node tail = snake->getTail();
+        Node footprint = _gameplayer->getLatestFootprint();
+        Node food = _gameplayer->getFood();
         bool pathExist = false;
 
         switch (method) {
@@ -824,18 +824,18 @@ int Bot::generate() {
             // force to recalculate every time
             AStarReset();
 
-            // run A* algorithm to find food
+            // run A* algorithm to perform "head to food path-finding"
             direction = AStar(head, food);
 
-            // clear the FOOD place and preserve the previous path
+            // clear the FOOD node
             AStarReset(food.first, food.second);
 
-            // reset for the next food to tail path-finding
+            // clear all except the current path for the next "food to tail path-finding"
             AStarPreservePath = true;
             AStarReset();
             AStarPreservePath = false;
 
-            // run A* algorithm to find a path from food to tail
+            // run A* algorithm to perform "food to tail path-finding"
             pathExist = (AStar(food, footprint) != 0);
 
             if (direction != 0 && pathExist) {

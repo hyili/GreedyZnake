@@ -2,7 +2,6 @@
 
 #include <climits>
 #include <cstdlib>
-#include <list>
 #include <mutex>
 #include <random>
 #include <string>
@@ -14,17 +13,18 @@
 #ifndef __UTILS_HEADER__
 #include "utils.h"
 #endif
-
-using namespace std;
+#ifndef __TYPEDEF_HEADER__
+#include "typedef.h"
+#endif
 
 template <typename GC> class GameBoardBase {
-    vector<string> currGameBoard;
-    mutable mutex currGameBoardMutex;
+    std::vector<std::string> currGameBoard;
+    mutable std::mutex currGameBoardMutex;
 
-    vector<string> background;
-    mutable mutex backgroundMutex;
+    std::vector<std::string> background;
+    mutable std::mutex backgroundMutex;
 
-    void applyNextGameBoard(const vector<string> &nextGameBoard);
+    void applyNextGameBoard(const std::vector<std::string> &nextGameBoard);
 
   protected:
     int xbound, ybound;
@@ -48,13 +48,13 @@ template <typename GC> class GameBoardBase {
         isClosed = isPaused = false;
     };
 
-    vector<string> getCurrGameBoardCopy() const;
+    std::vector<std::string> getCurrGameBoardCopy() const;
     bool checkClosed() const;
     bool checkPaused() const;
     bool checkValid(int y, int x) const;
     bool checkBackground() const;
     GC *getGameCounters() const;
-    vector<string> getBackgroundCopy() const;
+    std::vector<std::string> getBackgroundCopy() const;
     char getYX(int y, int x) const;
     int getXBound() const;
     int getYBound() const;
@@ -64,9 +64,9 @@ template <typename GC> class GameBoardBase {
 
     void updateGameBoard();
 
-    virtual const vector<string> genNextGameBoard();
+    virtual const std::vector<std::string> genNextGameBoard();
     virtual int setBackground(bool fence);
-    virtual int setBackground(const vector<string> &ref);
+    virtual int setBackground(const std::vector<std::string> &ref);
     virtual void pause();
     virtual void cont();
     virtual void reset();
@@ -77,8 +77,8 @@ template <typename GC> class GameBoardBase {
 };
 
 template <typename GC>
-vector<string> GameBoardBase<GC>::getCurrGameBoardCopy() const {
-    const lock_guard<mutex> lock(currGameBoardMutex);
+std::vector<std::string> GameBoardBase<GC>::getCurrGameBoardCopy() const {
+    const std::lock_guard<std::mutex> lock(currGameBoardMutex);
     return currGameBoard;
 };
 
@@ -97,7 +97,7 @@ template <typename GC> bool GameBoardBase<GC>::checkValid(int y, int x) const {
 }
 
 template <typename GC> bool GameBoardBase<GC>::checkBackground() const {
-    const lock_guard<mutex> lock(backgroundMutex);
+    const std::lock_guard<std::mutex> lock(backgroundMutex);
     return background.size() == ybound && ybound > 0 &&
            background[0].size() == xbound;
 };
@@ -107,13 +107,13 @@ template <typename GC> GC *GameBoardBase<GC>::getGameCounters() const {
 };
 
 template <typename GC>
-vector<string> GameBoardBase<GC>::getBackgroundCopy() const {
-    const lock_guard<mutex> lock(backgroundMutex);
+std::vector<std::string> GameBoardBase<GC>::getBackgroundCopy() const {
+    const std::lock_guard<std::mutex> lock(backgroundMutex);
     return background;
 };
 
 template <typename GC> char GameBoardBase<GC>::getYX(int y, int x) const {
-    const lock_guard<mutex> lock(currGameBoardMutex);
+    const std::lock_guard<std::mutex> lock(currGameBoardMutex);
     return currGameBoard[y][x];
 };
 
@@ -146,11 +146,11 @@ template <typename GC> void GameBoardBase<GC>::updateGameBoard() {
 };
 
 template <typename GC>
-const vector<string> GameBoardBase<GC>::genNextGameBoard() {
-    vector<string> tempGameBoard;
+const std::vector<std::string> GameBoardBase<GC>::genNextGameBoard() {
+    std::vector<std::string> tempGameBoard;
 
     // draw background
-    const lock_guard<mutex> lock(backgroundMutex);
+    const std::lock_guard<std::mutex> lock(backgroundMutex);
     for (int i = 0; i < background.size(); i++) {
         tempGameBoard.push_back(background[i]);
     }
@@ -162,15 +162,15 @@ const vector<string> GameBoardBase<GC>::genNextGameBoard() {
 
 template <typename GC>
 void GameBoardBase<GC>::applyNextGameBoard(
-    const vector<string> &nextGameBoard) {
-    const lock_guard<mutex> lock(currGameBoardMutex);
+    const std::vector<std::string> &nextGameBoard) {
+    const std::lock_guard<std::mutex> lock(currGameBoardMutex);
     currGameBoard = nextGameBoard;
 };
 
 template <typename GC> int GameBoardBase<GC>::setBackground(bool fence) {
     if (!checkBackground()) {
-        const lock_guard<mutex> lock(backgroundMutex);
-        background = vector<string>(ybound, string(xbound, ' '));
+        const std::lock_guard<std::mutex> lock(backgroundMutex);
+        background = std::vector<std::string>(ybound, std::string(xbound, ' '));
         if (fence) {
             for (int i = 0; i < xbound; i++) {
                 background[0][i] = '-';
@@ -189,9 +189,9 @@ template <typename GC> int GameBoardBase<GC>::setBackground(bool fence) {
 };
 
 template <typename GC>
-int GameBoardBase<GC>::setBackground(const vector<string> &ref) {
+int GameBoardBase<GC>::setBackground(const std::vector<std::string> &ref) {
     if (!checkBackground()) {
-        const lock_guard<mutex> lock(backgroundMutex);
+        const std::lock_guard<std::mutex> lock(backgroundMutex);
         background = ref;
     }
     updateGameBoard();

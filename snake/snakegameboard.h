@@ -11,11 +11,11 @@
 #endif
 
 class SnakeGameBoard : public GameBoardBase<SnakeGameCounters> {
-    list<pair<int, int>> footprint;
-    mutable mutex footprintMutex;
+    Nodes footprint;
+    mutable std::mutex footprintMutex;
 
-    vector<Snake *> _snakes;
-    mutable mutex snakesMutex;
+    std::vector<Snake *> _snakes;
+    mutable std::mutex snakesMutex;
 
   protected:
     int xfood, yfood;
@@ -82,11 +82,11 @@ class SnakeGameBoard : public GameBoardBase<SnakeGameCounters> {
     bool checkFence(const int y, const int x) const;
     Snake *getSnake(int index) const;
     int getNumOfSnakes() const;
-    list<pair<int, int>> getFootprintCopy() const;
-    pair<int, int> getLatestFootprint() const;
-    pair<int, int> getFood() const;
+    Nodes getFootprintCopy() const;
+    Node getLatestFootprint() const;
+    Node getFood() const;
 
-    const vector<string> genNextGameBoard() override;
+    const std::vector<std::string> genNextGameBoard() override;
     void pause() override;
     void cont() override;
     void reset() override;
@@ -98,7 +98,7 @@ class SnakeGameBoard : public GameBoardBase<SnakeGameCounters> {
     void moveEvent();
     void eatEvent();
     void updateSnakePosition(int locY, int locX);
-    void setFootprint(const list<pair<int, int>> &fp);
+    void setFootprint(const Nodes &fp);
     int addSnake(int snakelen, int snakey, int snakex);
     int copySnake(const SnakeGameBoard &ref);
 };

@@ -4,11 +4,13 @@
 #include <mutex>
 #include <string>
 
-using namespace std;
+#ifndef __TYPEDEF_HEADER__
+#include "typedef.h"
+#endif
 
 class GameCounters {
   protected:
-    mutable mutex gameCountersMutex;
+    mutable std::mutex gameCountersMutex;
 
   public:
     long long int frames;
@@ -21,7 +23,7 @@ class GameCounters {
     long long int prevTimer;
     int fps;
     int aps;
-    string debugMsg;
+    std::string debugMsg;
 
     int gameNum;
     int totalScore;

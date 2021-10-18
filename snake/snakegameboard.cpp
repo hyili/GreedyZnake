@@ -45,37 +45,37 @@ bool SnakeGameBoard::checkFence(const int y, const int x) const {
 
 Snake *SnakeGameBoard::getSnake(int index) const {
     // TODO: currently not support multiple snakes
-    const lock_guard<mutex> lock(snakesMutex);
+    const std::lock_guard<std::mutex> lock(snakesMutex);
     return _snakes[index];
 };
 
 int SnakeGameBoard::getNumOfSnakes() const {
-    const lock_guard<mutex> lock(snakesMutex);
+    const std::lock_guard<std::mutex> lock(snakesMutex);
     return _snakes.size();
 };
 
-list<pair<int, int>> SnakeGameBoard::getFootprintCopy() const {
-    const lock_guard<mutex> lock(footprintMutex);
+Nodes SnakeGameBoard::getFootprintCopy() const {
+    const std::lock_guard<std::mutex> lock(footprintMutex);
     return footprint;
 };
 
-pair<int, int> SnakeGameBoard::getLatestFootprint() const {
-    const lock_guard<mutex> lock(footprintMutex);
+Node SnakeGameBoard::getLatestFootprint() const {
+    const std::lock_guard<std::mutex> lock(footprintMutex);
     for (auto ptr = footprint.begin(); ptr != footprint.end(); ptr++) {
         if (checkMovable(ptr->first, ptr->second)) return *ptr;
     }
     return footprint.back();
 };
 
-pair<int, int> SnakeGameBoard::getFood() const {
-    return pair<int, int>(yfood, xfood);
+Node SnakeGameBoard::getFood() const {
+    return Node(yfood, xfood);
 };
 
-const vector<string> SnakeGameBoard::genNextGameBoard() {
-    vector<string> tempGameBoard;
+const std::vector<std::string> SnakeGameBoard::genNextGameBoard() {
+    std::vector<std::string> tempGameBoard;
 
     // draw background
-    const vector<string> background = getBackgroundCopy();
+    const std::vector<std::string> background = getBackgroundCopy();
     for (int i = 0; i < background.size(); i++) {
         tempGameBoard.push_back(background[i]);
     }
@@ -84,13 +84,13 @@ const vector<string> SnakeGameBoard::genNextGameBoard() {
     // TODO: currently not support multiple snakes
     if (checkSnake()) {
         // draw snake body
-        list<pair<int, int>> body = getSnake(0)->getBodyCopy();
+        Nodes body = getSnake(0)->getBodyCopy();
         for (auto ptr = body.begin(); ptr != body.end(); ptr++) {
             tempGameBoard[ptr->first][ptr->second] = '*';
         }
 
-        pair<int, int> head(getSnake(0)->getHead());
-        pair<int, int> tail(getSnake(0)->getTail());
+        Node head(getSnake(0)->getHead());
+        Node tail(getSnake(0)->getTail());
 
         // draw snake tail
         tempGameBoard[tail.first][tail.second] = '~';
@@ -138,7 +138,7 @@ void SnakeGameBoard::reset() {
 void SnakeGameBoard::close() {
     isClosed = true;
     while (getNumOfSnakes() > 0) {
-        const lock_guard<mutex> lock(snakesMutex);
+        const std::lock_guard<std::mutex> lock(snakesMutex);
         Snake *snake = _snakes.back();
         delete snake;
         _snakes.pop_back();
@@ -221,8 +221,8 @@ void SnakeGameBoard::placeFoodEvent() {
 
     // find a place for food
     int length = getSnake(0)->getLength();
-    int target = rand() % max((xbound * ybound - length), 1), counter = 0;
-    const vector<string> currGameBoard = getCurrGameBoardCopy();
+    int target = rand() % std::max((xbound * ybound - length), 1), counter = 0;
+    const std::vector<std::string> currGameBoard = getCurrGameBoardCopy();
     while (true) {
         for (int i = 0; i < xbound; i++) {
             for (int j = 0; j < ybound; j++) {
@@ -240,7 +240,7 @@ void SnakeGameBoard::placeFoodEvent() {
 void SnakeGameBoard::moveEvent() {
     // TODO: currently not support multiple snakes
     if (checkSnake()) {
-        pair<int, int> loc = getSnake(0)->getHead();
+        Node loc = getSnake(0)->getHead();
         int locY, locX;
         switch (getSnake(0)->getDirection()) {
         case KEY_UP:
@@ -274,7 +274,7 @@ void SnakeGameBoard::moveEvent() {
 void SnakeGameBoard::eatEvent() {
     // TODO: currently not support multiple snakes
     if (checkSnake()) {
-        pair<int, int> loc = getSnake(0)->getHead();
+        Node loc = getSnake(0)->getHead();
         if (loc.first == yfood && loc.second == xfood) {
             getSnake(0)->grow();
             _cnts->increaseScore();
@@ -289,15 +289,15 @@ void SnakeGameBoard::eatEvent() {
 
 void SnakeGameBoard::updateSnakePosition(int locY, int locX) {
     // TODO: currently not support multiple snakes
-    const lock_guard<mutex> lock(footprintMutex);
+    const std::lock_guard<std::mutex> lock(footprintMutex);
     if (footprint.size() > footprintLength)
         footprint.pop_back();
     footprint.push_front(getSnake(0)->getTail());
     getSnake(0)->updatePosition(locY, locX);
 };
 
-void SnakeGameBoard::setFootprint(const list<pair<int, int>> &fp) {
-    const lock_guard<mutex> lock(footprintMutex);
+void SnakeGameBoard::setFootprint(const Nodes &fp) {
+    const std::lock_guard<std::mutex> lock(footprintMutex);
     footprint = fp;
 };
 
@@ -309,7 +309,7 @@ int SnakeGameBoard::addSnake(int snakelen, int snakey, int snakex) {
     if (!checkMovable(teleportY(snakey), teleportX(snakex)))
         return -1;
 
-    const lock_guard<mutex> lock(snakesMutex);
+    const std::lock_guard<std::mutex> lock(snakesMutex);
     _snakes.push_back(
         new Snake(snakelen, teleportY(snakey), teleportX(snakex)));
 
@@ -318,7 +318,7 @@ int SnakeGameBoard::addSnake(int snakelen, int snakey, int snakex) {
 
 int SnakeGameBoard::copySnake(const SnakeGameBoard &ref) {
     for (int index = 0; index < ref.getNumOfSnakes(); index++) {
-        const lock_guard<mutex> lock(snakesMutex);
+        const std::lock_guard<std::mutex> lock(snakesMutex);
         _snakes.push_back(new Snake(ref.getSnake(index)));
     }
 

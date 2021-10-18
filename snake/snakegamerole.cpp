@@ -2,7 +2,7 @@
 #include "snakegamerole.h"
 #endif
 
-vector<string> SnakeGamePlayer::getCurrGameBoardCopy() const {
+std::vector<std::string> SnakeGamePlayer::getCurrGameBoardCopy() const {
     return _gameboard->getCurrGameBoardCopy();
 };
 
@@ -34,7 +34,7 @@ bool SnakeGamePlayer::checkBackground() const {
     return _gameboard->checkBackground();
 };
 
-vector<string> SnakeGamePlayer::getBackgroundCopy() const {
+std::vector<std::string> SnakeGamePlayer::getBackgroundCopy() const {
     return _gameboard->getBackgroundCopy();
 };
 
@@ -42,7 +42,7 @@ const Snake *SnakeGamePlayer::getSnake(int index) const {
     return _gameboard->getSnake(index);
 };
 
-pair<int, int> SnakeGamePlayer::getLatestFootprint() const {
+Node SnakeGamePlayer::getLatestFootprint() const {
     return _gameboard->getLatestFootprint();
 };
 
@@ -60,13 +60,13 @@ int SnakeGamePlayer::teleportX(int x) const {
     return _gameboard->teleportX(x);
 };
 
-pair<int, int> SnakeGamePlayer::getFood() const {
+Node SnakeGamePlayer::getFood() const {
     return _gameboard->getFood();
 };
 
 int SnakeGamePlayer::control(int c) { return _gameboard->control(c); };
 
-void SnakeGamePlayer::setDebugMsg(string s) { _cnts->setDebugMsg(s); };
+void SnakeGamePlayer::setDebugMsg(std::string s) { _cnts->setDebugMsg(s); };
 
 SnakeGameMaster &SnakeGamePlayer::getFullAccess() {
     SnakeGameMaster *target = dynamic_cast<SnakeGameMaster *>(this);
@@ -88,19 +88,19 @@ void SnakeGameMaster::updateSnakePosition(int locY, int locX) {
 
 void SnakeGameCamera::postConnectGameBoard() {
     preparedScreen =
-        vector<string>(toScreenY(_gameboard->getYBound()),
-                       string(toScreenX(_gameboard->getXBound()), ' '));
+        std::vector<std::string>(toScreenY(_gameboard->getYBound()),
+                       std::string(toScreenX(_gameboard->getXBound()), ' '));
     currScreen =
-        vector<string>(toScreenY(_gameboard->getYBound()),
-                       string(toScreenX(_gameboard->getXBound()), ' '));
+        std::vector<std::string>(toScreenY(_gameboard->getYBound()),
+                       std::string(toScreenX(_gameboard->getXBound()), ' '));
     prevScreen =
-        vector<string>(toScreenY(_gameboard->getYBound()),
-                       string(toScreenX(_gameboard->getXBound()), ' '));
+        std::vector<std::string>(toScreenY(_gameboard->getYBound()),
+                       std::string(toScreenX(_gameboard->getXBound()), ' '));
     updatePreparedScreen();
 };
 
 void SnakeGameCamera::updatePreparedScreen() {
-    const vector<string> currGameBoard = _gameboard->getCurrGameBoardCopy();
+    const std::vector<std::string> currGameBoard = _gameboard->getCurrGameBoardCopy();
 
     // conversion
     for (int y = 0; y < _gameboard->getYBound(); y++) {
@@ -120,7 +120,7 @@ void SnakeGameCamera::cancelRefresh() { _gameboard->setRefresh(false); };
 
 void SnakeGameCamera::print() {
     int x, y;
-    string statusBar = _cnts->getStatusBar();
+    std::string statusBar = _cnts->getStatusBar();
 
     // reset
     prevScreen = currScreen;

@@ -1,12 +1,13 @@
 #define __GAMEAGENT_HEADER__
 
 #include <cstdlib>
-#include <list>
 #include <mutex>
 #include <string>
 #include <vector>
 
-using namespace std;
+#ifndef __TYPEDEF_HEADER__
+#include "typedef.h"
+#endif
 
 class GameAgentBase {
   protected:

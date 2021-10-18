@@ -30,7 +30,7 @@ class SnakeGamePlayer : public GameRoleBase<SnakeGameBoard, SnakeGameCounters> {
         _cnts = ref->_cnts;
     };
 
-    vector<string> getCurrGameBoardCopy() const;
+    std::vector<std::string> getCurrGameBoardCopy() const;
     bool checkSnake() const;
     bool checkFood() const;
     bool checkValid(int y, int x) const;
@@ -39,18 +39,18 @@ class SnakeGamePlayer : public GameRoleBase<SnakeGameBoard, SnakeGameCounters> {
     bool checkSnakeTail(const int y, const int x) const;
     bool checkFence(const int y, const int x) const;
     bool checkBackground() const;
-    vector<string> getBackgroundCopy() const;
+    std::vector<std::string> getBackgroundCopy() const;
     const Snake *getSnake(int index) const;
-    pair<int, int> getLatestFootprint() const;
+    Node getLatestFootprint() const;
     int getXBound() const;
     int getYBound() const;
     int getMovableArea() const;
     int teleportY(int y) const;
     int teleportX(int x) const;
-    pair<int, int> getFood() const;
+    Node getFood() const;
 
     int control(int c);
-    void setDebugMsg(string s);
+    void setDebugMsg(std::string s);
 
     SnakeGameMaster &getFullAccess();
 };
@@ -69,11 +69,11 @@ class SnakeGameMaster : public SnakeGamePlayer {
 };
 
 class SnakeGameCamera : public GameRoleBase<SnakeGameBoard, SnakeGameCounters> {
-    vector<string> preparedScreen;
-    vector<string> currScreen;
-    vector<string> prevScreen;
-    string prevOneLineScreen;
-    string currOneLineScreen;
+    std::vector<std::string> preparedScreen;
+    std::vector<std::string> currScreen;
+    std::vector<std::string> prevScreen;
+    std::string prevOneLineScreen;
+    std::string currOneLineScreen;
 
     void postConnectGameBoard() override;
 

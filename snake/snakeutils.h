@@ -7,8 +7,6 @@
 #include "utils.h"
 #endif
 
-using namespace std;
-
 class SnakeGameCounters : public GameCounters {
     long long int trigBot;
     long long int prevTrigBot;
@@ -31,10 +29,10 @@ class SnakeGameCounters : public GameCounters {
         tps = ref->tps;
     };
 
-    const string getStatusBar();
+    const std::string getStatusBar();
     void updateTPS(int mul);
     void increaseTriggerBot();
-    void setDebugMsg(string s);
+    void setDebugMsg(std::string s);
 
     void postUpdatePrev() override;
 };
