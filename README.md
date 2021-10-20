@@ -3,7 +3,7 @@ GreedyZnake on Terminal GameBoard
 A group of greedy snake gaming AI on ncurses-based gameboard framework using C++. How greedy are you?
 
 ### Demo
-Building process is deprecated, refer to [Building Process](#How-to-build)
+Building process is deprecated, for the latest building instructions, please refers to [Building Process](#How-to-build)
 ![build_and_execute](build_and_execute.gif)
 ![game_autoplay](game_autoplay.gif)
 
@@ -12,7 +12,7 @@ Written in C++(C++11) Ncurses library
 
 ### How to build
 ```
-# cd {project}
+# cd {Project_Root}
 # aclocal
 # autoconf
 # automake --add-missing
@@ -33,7 +33,6 @@ Using -a and -m option. e.g.
 ```
 
 ### Options available
-options available:
 - -a: auto play mode, default false.
     - Auto mode(-a) support, using customizable Bot to autoplay the game
 - -e: fence around the map, default false.
