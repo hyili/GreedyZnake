@@ -1,5 +1,37 @@
 TODO
-tmp/*
-output/*
-!tmp/README.md
-!output/README.md
+
+# intermediate file
+autoscan.log
+config.log
+Makefile
+base/.deps/*
+base/.dirstamp/*
+snake_src/.deps/*
+snake_src/.dirstamp/*
+autom4te.cache
+autoscan.log
+config.log
+config.status
+
+# lib & execution
+snake
+lib*
+
+# automake additional file
+aclocal.m4
+AUTHORS
+compile
+configure
+ChangeLog
+COPYING
+depcomp
+INSTALL
+install-sh
+Makefile.in
+missing
+NEWS
+README
+
+# necessary
+!configure.ac
+!Makefile.am
