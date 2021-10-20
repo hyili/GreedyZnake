@@ -19,18 +19,13 @@ lib*
 
 # automake additional file
 aclocal.m4
-AUTHORS
 compile
 configure
-ChangeLog
-COPYING
 depcomp
 INSTALL
 install-sh
 Makefile.in
 missing
-NEWS
-README
 
 # necessary
 !configure.ac
