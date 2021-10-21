@@ -827,21 +827,28 @@ int Bot::generate() {
             // run A* algorithm to perform "head to food path-finding"
             direction = AStar(head, food);
 
-            // clear the FOOD node
-            AStarReset(food.first, food.second);
+            /* if we can find path out */
+            if (direction != 0) {
+                // if we don't have footprint **INITIALLY WHEN GAME START**
+                // and we can find a path from head to food, use simple A* algorithm
+                if (!_gameplayer->checkMovable(footprint.first, footprint.second)) return direction;
 
-            // clear all except the current path for the next "food to tail path-finding"
-            AStarPreservePath = true;
-            AStarReset();
-            AStarPreservePath = false;
+                // clear the FOOD node
+                AStarReset(food.first, food.second);
 
-            // run A* algorithm to perform "food to tail path-finding"
-            pathExist = (AStar(food, footprint) != 0);
+                // clear all except the current path for the next "food to tail path-finding"
+                AStarPreservePath = true;
+                AStarReset();
+                AStarPreservePath = false;
 
-            if (direction != 0 && pathExist) {
-                AStarCounter = 0;
-                prevDirection = direction;
-                return direction;
+                // run A* algorithm to perform "food to tail path-finding"
+                pathExist = (AStar(food, footprint) != 0);
+
+                if (direction != 0 && pathExist) {
+                    AStarCounter = 0;
+                    prevDirection = direction;
+                    return direction;
+                }
             }
 
             debugMsg = "Filling...";
