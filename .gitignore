@@ -6,8 +6,10 @@ config.log
 Makefile
 base/.deps/*
 base/.dirstamp
+base/*.o
 snake_src/.deps/*
 snake_src/.dirstamp
+snake_src/*.o
 autom4te.cache
 autoscan.log
 config.log
