@@ -5,9 +5,9 @@ autoscan.log
 config.log
 Makefile
 base/.deps/*
-base/.dirstamp/*
+base/.dirstamp
 snake_src/.deps/*
-snake_src/.dirstamp/*
+snake_src/.dirstamp
 autom4te.cache
 autoscan.log
 config.log
