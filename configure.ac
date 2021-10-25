@@ -13,7 +13,8 @@ AC_PROG_CC([gcc])
 AC_PROG_RANLIB([libs])
 
 # Checks for libraries.
-#AC_CHECK_LIB([ncurses], [getch])
+AC_CHECK_LIB([ncurses], [getch])
+AC_CHECK_LIB([pthread], [pthread_create])
 
 # Checks for header files.
 AC_CHECK_HEADERS([unistd.h])
