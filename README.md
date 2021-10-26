@@ -1,6 +1,10 @@
 GreedyZnake on Terminal GameBoard
 ===
-A group of greedy snake gaming AI on ncurses-based gameboard framework using C++. How greedy are you?
+#### A group of greedy snake gaming AI on ncurses-based gameboard framework using C++. How greedy are you?
+![GithubWorkFlowStatus](https://img.shields.io/github/workflow/status/hyili/GreedyZnake/CodeQL)
+![GithubLastCommitDay](https://img.shields.io/github/last-commit/hyili/GreedyZnake)
+![GithubCommitActivity](https://img.shields.io/github/commit-activity/m/hyili/GreedyZnake)
+![GithubCodeSize](https://img.shields.io/github/languages/code-size/hyili/GreedyZnake)
 
 ### Demo
 Building process is deprecated, for the latest building instructions, please refers to [Building Process](#How-to-build)
