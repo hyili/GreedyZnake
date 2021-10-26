@@ -1,6 +1,7 @@
 GreedyZnake on Terminal GameBoard
 ===
 #### A group of greedy snake gaming AI on ncurses-based gameboard framework using C++. How greedy are you?
+#### https://github.com/hyili/GreedyZnake.git
 ![GithubWorkFlowStatus](https://img.shields.io/github/workflow/status/hyili/GreedyZnake/CodeQL)
 ![GithubLastCommitDay](https://img.shields.io/github/last-commit/hyili/GreedyZnake)
 ![GithubCommitActivity](https://img.shields.io/github/commit-activity/m/hyili/GreedyZnake)
